@@ -1,8 +1,5 @@
 CREATE DATABASE LojaDiscos
 
-
-
-
 CREATE TABLE Loja (
         Endereço		varchar(60) UNIQUE NOT NULL,
         ID_Loja         INT	UNIQUE NOT NULL,
@@ -48,15 +45,16 @@ CREATE TABLE Cliente(
         PRIMARY KEY(NIF));
 
 CREATE TABLE Estado(
-	id_estado	INT UNIQUE NOT NULL,
+	id_estado	INT IDENTITY(1,1),
 	Estado		varchar(30) NOT NULL,
 	Atraso		INT,
 
 	PRIMARY KEY(id_estado)
 );
 
+
 CREATE TABLE Mensalidade(
-	id_mensalidade	INT UNIQUE NOT NULL,
+	id_mensalidade	INT IDENTITY(1,1),
 	Valor			money NOT NULL,
 	Desconto		INT NOT NULL,
 	id_estado		INT NOT NULL REFERENCES Estado(id_estado),
@@ -66,7 +64,7 @@ CREATE TABLE Mensalidade(
 );
 
 CREATE TABLE Promocao(
-	id_promocao	INT UNIQUE NOT NULL,
+	id_promocao	INT IDENTITY(1,1),
 	desconto	INT	NOT NULL,
 
 	PRIMARY KEY(id_promocao)
@@ -88,42 +86,42 @@ CREATE TABLE StandardCliente(
 
 
 CREATE TABLE Artista(
-	id_artista	INT UNIQUE NOT NULL,
+	id_artista	INT IDENTITY(1,1) ,
 	Nome		varchar(30) NOT NULL,
 
 	PRIMARY KEY(id_artista)
 	);
 
 CREATE TABLE Genero(
-	id_genero INT UNIQUE NOT NULL,
+	id_genero INT IDENTITY(1,1),
 	Nome varchar(30) NOT NULL,
 
 	PRIMARY KEY(id_genero)
 );
 
 CREATE TABLE TipoDiscos(
-	id_tipo			INT UNIQUE NOT NULL,
+	id_tipo			INT IDENTITY(1,1),
 	Nome			varchar(30) NOT NULL,
 
 	PRIMARY KEY(id_tipo)
 	);
 
 CREATE TABLE TipoEncomenda(
-	id_tipoEncomenda	INT UNIQUE NOT NULL,
+	id_tipoEncomenda	INT IDENTITY(1,1),
 	TipoEncomenda		varchar(30) NOT NULL,
 
 	PRIMARY KEY(id_tipoEncomenda)
 );
 
 CREATE TABLE Pagamento(
-	id_pagamento	INT UNIQUE NOT NULL,
+	id_pagamento	INT IDENTITY(1,1),
 	metodo			varchar(30) NOT NULL,
 
 	PRIMARY KEY(id_pagamento)
 
 );
 CREATE TABLE Encomenda(
-	id_encomenda	INT UNIQUE NOT NULL ,
+	id_encomenda	INT UNIQUE IDENTITY(1,1) ,
 	NIF_Cliente		INT REFERENCES Cliente(NIF),
 	id_tipoEncomenda INT NOT NULL REFERENCES TipoEncomenda(id_tipoEncomenda),
 	id_pagamento	INT NOT NULL REFERENCES Pagamento(id_pagamento),
@@ -147,6 +145,7 @@ CREATE TABLE Discos(
 		PRIMARY KEY(id_disco)
 );
 
+ALter TABLE Discos ALter column imagemDisco varbinary(max);
 
 
 CREATE TABLE Artista_genero(
@@ -157,7 +156,7 @@ CREATE TABLE Artista_genero(
 		);
 
 CREATE TABLE Editora(
-		id_editora	INT UNIQUE NOT NULL,
+		id_editora	INT IDENTITY(1,1),
 		Nome		varchar(30) UNIQUE NOT NULL,
 		Telefone	INT UNIQUE NOT NULL,
 		Email		varchar(20) UNIQUE NOT NULL,
@@ -176,7 +175,7 @@ CREATE TABLE Discos_encomenda(
 
 
 CREATE TABLE Venda(
-	id_venda		INT NOT NULL,
+	id_venda		INT IDENTITY(1,1),
 	Data			date NOT NULL ,
 	Hora			time NOT NULL,
 	id_loja			INT NOT NULL REFERENCES Loja(id_loja) ,
