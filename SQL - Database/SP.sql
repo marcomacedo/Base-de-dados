@@ -1,4 +1,4 @@
---Pesqusiar Clientes premium
+--login
 CREATE PROCEDURE CheckPassword
     @username VARCHAR(30),
     @password varchar(30)
@@ -36,6 +36,7 @@ from Pessoa As P JOIN Cliente AS C ON P.NIF = C.NIF
 		JOIN Mensalidade as M on M.id_mensalidade=PC.id_mensalidade JOIN Estado as E on E.id_estado=M.id_estado
 where P.NIF = @pesquisa
 
+
 --Pesquisar Funcionario
 Go
 Create procedure pesquisaFuncionario
@@ -57,6 +58,7 @@ from Pessoa As P JOIN Funcionario AS F ON P.NIF = F.NIF JOIN Loja As L On L.ID_L
 where P.NIF = @pesquisa
 group by P.Nome,P.data_nascimento,P.Telefone, P.Endereço, P.Cod_postal,
 		F.comissao, F.Salario,L.Nome
+
 
 --Pesquisar Clientes Standard
 Go
@@ -128,12 +130,16 @@ Where @tipo =T.Nome
 -- inserir Artista
 GO
 CREATE PROCEDURE InserirArtista
-       @Nome						   VARCHAR(30) 
+       @Nome						   VARCHAR(30),
+	   @id_artista						int OUT
 AS
 BEGIN
 	SET NOCOUNT ON 
 	INSERT INTO Artista(Nome) Values (@Nome)
+	SET @id_artista = SCOPE_IDENTITY()
 END
+
+
 --pesqusiar Artista
 GO
 Create procedure pesquisarArtista
@@ -143,6 +149,8 @@ as
 select @id_artista=id_artista from Artista As A
 where @nomeArtista = A.Nome
 
+
+--inserir Funcionário
 GO 
 CREATE PROCEDURE InserirFuncionario
 	@NIFF			int,
@@ -198,9 +206,7 @@ CREATE PROCEDURE InserirDisco
        @ano                            int, 
        @unidades	                   int,
 	   @genero						   varchar(30),
-	   @tipo						   varchar(30)
-
-               
+	   @tipo						   varchar(30)              
 AS 
 BEGIN 
      SET NOCOUNT ON 
@@ -224,7 +230,10 @@ BEGIN
             titulo                     ,
             preço                      ,
             Ano                        ,
-			stock				
+			stock						,
+			id_artista					,
+			id_genero					,
+			id_tipo						
 
           ) 
      VALUES 
@@ -233,7 +242,10 @@ BEGIN
             @titulo                    ,
             @preço                     ,
             @ano                       ,
-            @unidades                  			   
+            @unidades                  	,
+			@id_art						,
+			@id_gen					,
+			@id_tipo		   
           ) 
 
 END 
