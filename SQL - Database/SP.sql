@@ -107,7 +107,7 @@ create procedure pesquisarGenero
 @id_genero int OUTPUT
 as
 select @id_genero=id_genero from Genero as G
-Where @genero =G.Nome
+Where @genero=G.Nome
 
 
 --pesquisar todos genero
@@ -130,13 +130,12 @@ Where @tipo =T.Nome
 -- inserir Artista
 GO
 CREATE PROCEDURE InserirArtista
-       @Nome						   VARCHAR(30),
-	   @id_artista						int OUT
+       @Nome						   VARCHAR(30)
 AS
 BEGIN
 	SET NOCOUNT ON 
 	INSERT INTO Artista(Nome) Values (@Nome)
-	SET @id_artista = SCOPE_IDENTITY()
+
 END
 
 
@@ -209,20 +208,23 @@ CREATE PROCEDURE InserirDisco
 	   @tipo						   varchar(30)              
 AS 
 BEGIN 
-     SET NOCOUNT ON 
-	 declare @id_art int;
+    
+	 declare @id_art int
+	 SET @id_art = SCOPE_IDENTITY()
 	 exec pesquisarArtista @artista, @id_art
 	 if @id_art is null
 		begin
 			exec InserirArtista @artista
-			exec pesquisarArtista @artista, @id_art
+			exec pesquisarArtista @artista, @id_art OUTPUT
 		end
 
-	 declare @id_gen int;
-	 exec pesquisarGenero @tipo, @id_gen
+	 declare @id_gen int
+	 --SET @id_gen = SCOPE_IDENTITY()
+	 exec pesquisarGenero @genero, @id_gen OUTPUT
 
-	 declare @id_tipo int;
-	 exec pesquisartipo @tipo, @id_tipo
+	 declare @id_tipo int
+	 --SET @id_tipo = SCOPE_IDENTITY()
+	 exec pesquisartipo @tipo, @id_tipo OUTPUT
 
 	 INSERT INTO Discos
           ( 
@@ -249,4 +251,94 @@ BEGIN
           ) 
 
 END 
+
+-- inserir cliente standard
+
+GO 
+CREATE PROCEDURE InserirClienteSt
+	@NIFF			int,
+	@Nome			varchar(30),
+	@Sexo			char(1),
+	@Addr			varchar(60),
+	@CP				varchar(8),
+	@Tele			int,
+	@Data			date,
+	@Loja			varchar(30)
+AS
+BEGIN
+	declare @id_loja int
+	exec pesquisarLoja @Loja, @id_loja OUTPUT
+
+	INSERT INTO Pessoa (
+		NIF,
+		Nome,
+		Sexo,
+		Endereço,
+		Cod_postal,
+		Telefone,
+		data_nascimento) VALUES(
+
+			@NIFF,
+			@Nome,
+			@Sexo,
+			@Addr,
+			@CP,
+			@Tele,
+			@Data)
+
+		INSERT INTO Cliente(
+			NIF,
+			ID_Loja
+			) VALUES (
+			@NIFF,
+			@id_loja
+		)
+
+END
+
+-- inserir cliente premium
+
+GO 
+CREATE PROCEDURE InserirClientePr
+	@NIFF			int,
+	@Nome			varchar(30),
+	@Sexo			char(1),
+	@Addr			varchar(60),
+	@CP				varchar(8),
+	@Tele			int,
+	@Data			date,
+	@Loja			varchar(30)
+AS
+BEGIN
+	declare @id_loja int
+	exec pesquisarLoja @Loja, @id_loja OUTPUT
+
+	INSERT INTO Pessoa (
+		NIF,
+		Nome,
+		Sexo,
+		Endereço,
+		Cod_postal,
+		Telefone,
+		data_nascimento) VALUES(
+
+			@NIFF,
+			@Nome,
+			@Sexo,
+			@Addr,
+			@CP,
+			@Tele,
+			@Data)
+
+		INSERT INTO PremiumCliente(
+			NIF
+	
+			) VALUES (
+			@NIFF
+			
+			)
+
+END
+
+
 

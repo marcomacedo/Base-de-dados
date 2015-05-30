@@ -138,15 +138,14 @@ CREATE TABLE Discos(
 		id_artista		INT NOT NULL REFERENCES Artista(id_artista),
 		id_genero		INT NOT NULL REFERENCES Genero(id_genero),
 		id_tipo			INT NOT NULL REFERENCES TipoDiscos(id_tipo),
-		id_promocao		INT NOT NULL REFERENCES Promocao(id_promocao),
-		id_Encomenda	INT NOT NULL REFERENCES Encomenda(id_encomenda),
+		id_promocao		INT  REFERENCES Promocao(id_promocao),
+		id_Encomenda	INT  REFERENCES Encomenda(id_encomenda),
 		imagemDisco		varbinary(max) NOT NULL,
 
 		PRIMARY KEY(id_disco)
 );
 
 ALter TABLE Discos ALter column imagemDisco varbinary(max);
-
 
 CREATE TABLE Artista_genero(
 		id_artista	INT NOT NULL REFERENCES Artista(id_artista),
