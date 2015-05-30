@@ -74,7 +74,14 @@ from Pessoa As P JOIN Cliente AS C ON P.NIF = C.NIF
 where P.NIF = @pesquisa1
 
 
+-- pesquisar loja
+GO
+Create Procedure pesquisarLoja
+	@Nome		varchar(30),
+	@id_loja	int OUTPUT
 
+AS
+	SELECT @id_loja = L.ID_Loja from Loja As L WHERE @Nome = L.Nome
 
 -- Pesquisar por Disco
 Go
@@ -127,8 +134,6 @@ BEGIN
 	SET NOCOUNT ON 
 	INSERT INTO Artista(Nome) Values (@Nome)
 END
-	
-   
 --pesqusiar Artista
 GO
 Create procedure pesquisarArtista
@@ -138,6 +143,50 @@ as
 select @id_artista=id_artista from Artista As A
 where @nomeArtista = A.Nome
 
+GO 
+CREATE PROCEDURE InserirFuncionario
+	@NIFF			int,
+	@Nome			varchar(30),
+	@Sexo			char(1),
+	@Addr			varchar(60),
+	@CP				varchar(8),
+	@Tele			int,
+	@Data			date,
+	@Wage			Money,
+	@Loja			varchar(30),
+	@comissao		int
+AS
+BEGIN
+	declare @id_loja int
+	exec pesquisarLoja @Loja, @id_loja OUTPUT
+
+	INSERT INTO Pessoa (
+		NIF,
+		Nome,
+		Sexo,
+		Endereço,
+		Cod_postal,
+		Telefone,
+		data_nascimento) VALUES(
+
+			@NIFF,
+			@Nome,
+			@Sexo,
+			@Addr,
+			@CP,
+			@Tele,
+			@Data)
+
+		INSERT INTO Funcionario(
+			NIF,
+			Salario,
+			ID_Loja,
+			Comissao) VALUES (
+			@NIFF,
+			@Wage,
+			@id_loja,
+			@comissao)
+END
 
 --Inserir Disco
 GO
