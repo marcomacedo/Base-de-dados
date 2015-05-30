@@ -139,6 +139,7 @@ BEGIN
 END
 
 
+
 --pesqusiar Artista
 GO
 Create procedure pesquisarArtista
@@ -252,6 +253,7 @@ BEGIN
 
 END 
 
+
 -- inserir cliente standard
 
 GO 
@@ -307,12 +309,13 @@ CREATE PROCEDURE InserirClientePr
 	@CP				varchar(8),
 	@Tele			int,
 	@Data			date,
-	@Loja			varchar(30)
+	@Loja			varchar(30),
+	@mensalidade	int
 AS
 BEGIN
 	declare @id_loja int
 	exec pesquisarLoja @Loja, @id_loja OUTPUT
-
+	
 	INSERT INTO Pessoa (
 		NIF,
 		Nome,
@@ -332,13 +335,33 @@ BEGIN
 
 		INSERT INTO PremiumCliente(
 			NIF
-	
 			) VALUES (
 			@NIFF
+		
 			
-			)
+		)
+
+		INSERT INTO Cliente(
+			NIF,
+			ID_Loja
+			) VALUES (
+			@NIFF,
+			@id_loja
+		)
+
 
 END
 
 
+--historico_vendas
 
+GO
+Create Procedure historico_vendas
+	@pesquisaID int,
+	@Data		date OUTPUT,
+	@Hora		time OUTPUT,
+	@titulo		varchar(30) OUTPUT
+
+AS
+SELECT @Data = V.Data, @Hora =V.Hora, @titulo=D.titulo from Venda As V JOIN Discos As D ON V.id_disco=D.id_disco
+WHERE V.id_disco=@pesquisaID
