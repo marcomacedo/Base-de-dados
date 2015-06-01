@@ -1,20 +1,37 @@
---login
-CREATE PROCEDURE CheckPassword
-    @username VARCHAR(30),
-    @password varchar(30)
+
+
+-- login func
+
+GO
+Create procedure loginFunc
+@NIF_Func int
 AS
-BEGIN
+declare @nif_f int
+SELECT @nif_f=NIF FROM Funcionario where NIF=@NIF_Func
+if @NIF_Func is null
+return -1
+else if @NIF_Func=@nif_f
+return 1
+else
+return -2
 
-SET NOCOUNT ON
-
-IF EXISTS(SELECT * FROM Admini WHERE username = @username AND passe = @password)
-    SELECT 'true' AS UserExists
-ELSE
-    SELECT 'false' AS UserExists
-
-END
-
-
+--login admin
+GO
+CREATE PROCEDURE logincheck
+(
+@u varchar(50),
+@p varchar(100)
+)
+as
+declare @ap varchar(50)
+select @ap=passe from Admini where username=@u
+if @ap is null
+return -1
+else
+if @ap=@p
+return 1
+else
+return -2
 
 --Pesqusiar Clientes premium
 
@@ -365,3 +382,150 @@ Create Procedure historico_vendas
 AS
 SELECT @Data = V.Data, @Hora =V.Hora, @titulo=D.titulo from Venda As V JOIN Discos As D ON V.id_disco=D.id_disco
 WHERE V.id_disco=@pesquisaID
+
+
+
+--validar nif cliente
+Create procedure ClientePRExists
+@Nif_Cliente int
+AS 
+Select @Nif_Cliente=C.NIF From Cliente As C JOIN PremiumCliente AS PC ON C.NIF = PC.NIF
+where PC.NIF=@Nif_Cliente 
+
+
+---registar Vendas
+GO
+Create procedure registarVenda
+	--@id_venda int,
+	@Data	date,
+	@Hora	time,
+	@id_loja  int,
+	@NIF_Funcionario int,
+	@id_disco int,
+	@Nif_cliente int
+
+AS
+BEGIN
+	
+	INSERT INTO Venda (--id_venda,
+					   Data,
+					   Hora,
+					   id_loja,
+					   NIF_Funcionario,
+					   id_disco, 
+					   Nif_cliente
+					   )
+	VALUES (--@id_venda,
+			@Data,
+			@Hora,
+			@id_loja,
+			@NIF_Funcionario,
+			@id_disco,
+			@Nif_cliente)
+	END
+
+--- Encomendas
+
+GO
+create procedure encomendas
+@id_disco int
+as
+	select * from getDadosEncomendasBYID(@id_disco)
+
+---vendas
+
+GO
+create procedure getVendas
+@id_disco int
+as
+	select * from getDadosVendasByIDDisco(@id_disco)
+
+
+
+
+
+-- pesquisar tipo encomenda
+GO
+Create Procedure pesquisarTipoEncomenda
+	@TipoEncomenda	varchar(30),
+	@id_tipo	int OUTPUT
+
+AS
+	SELECT @id_tipo = T.id_tipoEncomenda from TipoEncomenda As T WHERE @TipoEncomenda = T.TipoEncomenda
+
+
+
+-- pesquisar tipo pagamento
+GO
+Create Procedure pesquisarTipoPagamento
+	@metodo	varchar(30),
+	@id_pagamento	int OUTPUT
+
+AS
+	SELECT @id_pagamento = P.id_pagamento from Pagamento As P WHERE @metodo = P.metodo
+
+-- pesquisar editora
+GO
+Create Procedure pesquisarEditora
+	@Nome	varchar(30),
+	@id_edito	int OUTPUT
+
+AS
+	SELECT @id_edito = E.id_editora from Editora As E WHERE @Nome = E.Nome
+
+-- inserir id no discos_encomenda
+Go
+create procedure getIdDiscos_encomenda
+@id_disco int,
+@id_encomenda int OUTPUT
+as
+select @id_encomenda = E.id_encomenda+1 FROM Encomenda As E JOIN Discos_encomenda AS DE ON E.id_encomenda=DE.id_encomenda
+where @id_disco = DE.id_disco
+
+
+-- nova encomenda
+
+GO 
+CREATE PROCEDURE InserirEncomenda
+
+	@tipoEncomenda		varchar(30),
+	@pagamento		    varchar(30),
+	@id_disco			int,
+	@Data_expedicao		date,
+	@editora			varchar(30)
+	
+AS
+BEGIN
+	declare @id_tipoEncomenda int
+	exec pesquisarTipoEncomenda @tipoEncomenda, @id_tipoEncomenda OUTPUT
+
+	declare @id_pagamento int
+	exec pesquisarTipoPagamento @pagamento, @id_pagamento OUTPUT
+
+	declare @id_editora int
+	exec pesquisarEditora @editora, @id_editora OUTPUT
+	
+	declare @id_enc int
+	exec getIdDiscos_encomenda @id_disco, @id_enc OUTPUT
+
+	INSERT INTO Encomenda(
+		id_tipoEncomenda,
+		id_pagamento) 
+		
+		VALUES(
+			@id_tipoEncomenda,
+			@id_pagamento)
+
+		INSERT INTO Discos_encomenda(
+		id_disco,
+			id_encomenda,
+			Data_expedicao,
+			id_Editora
+			) VALUES (
+			@id_disco,
+			@id_enc,
+			@Data_expedicao,
+			@id_editora
+		)
+
+END

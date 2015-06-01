@@ -1,11 +1,14 @@
+-- get dados encomendas
 GO
 Create Function historico_encomendas() returns TABLE
 
 as
 	return (SELECT * FROM Encomenda);
 
+
+
 GO
-Create Function getDadosEncomendasByID() returns TABLE
+Create Function getDadosEncomendasBYID(@id_disco int) returns TABLE
 	
 as
 	return (SELECT DE.Data_expedicao, Ed.Nome, TE.TipoEncomenda, D.titulo FROM Encomenda As E 
@@ -14,6 +17,24 @@ as
 				JOIN TipoEncomenda As TE On E.id_tipoEncomenda = TE.id_tipoEncomenda
 				JOIN Discos As D On D.id_disco = DE.id_disco
 				JOIN Cliente As C On C.NIF = E.NIF_Cliente
-				Join Pagamento As Pg On E.id_pagamento = Pg.id_pagamento)
+				Join Pagamento As Pg On E.id_pagamento = Pg.id_pagamento
+				where DE.id_disco=@id_disco)
 GO
-SELECT * FROM getDadosEncomendasByID()
+
+
+
+-- get dados vendas
+
+Create Function getDadosVendasByIDDisco(@id_disco int) returns TABLE
+
+as
+	return (SELECT V.Data, V.Hora, D.titulo from Venda As V 
+			JOIN Discos As D ON V.id_disco=D.id_disco
+			where V.id_disco =@id_disco)
+
+GO
+
+
+
+
+

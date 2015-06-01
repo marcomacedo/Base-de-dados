@@ -93,6 +93,6 @@ INSERT INTO PremiumCLiente values (213565552, 1, 1);
 
 INSERT INTO StandardCliente values (458695566);
 
-INSERT INTO Venda (Data, Hora, id_loja, NIF_Funcionario, id_disco) values ('2015-02-23', '10:30', 1,154545566,3);
-INSERT INTO Venda (Data, Hora, id_loja, NIF_Funcionario, id_disco) values ('2015-02-13', '11:30', 2,548565641,2);
-INSERT INTO Venda (Data, Hora, id_loja, NIF_Funcionario, id_disco) values ('2015-02-03','15:23', 2,548565641,2);
+INSERT INTO Venda (Data, Hora, id_loja, NIF_Funcionario, id_disco,Nif_cliente) values ('2015-02-23', '10:30', 1,154545566,3,897897);
+INSERT INTO Venda (Data, Hora, id_loja, NIF_Funcionario, id_disco, Nif_cliente) values ('2015-02-13', '11:30', 2,548565641,2,213565552);
+INSERT INTO Venda (Data, Hora, id_loja, NIF_Funcionario, id_disco, Nif_cliente) values ('2015-02-03','15:23', 2,548565641,2,458695566);

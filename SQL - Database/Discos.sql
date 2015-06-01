@@ -180,6 +180,8 @@ CREATE TABLE Venda(
 	id_loja			INT NOT NULL REFERENCES Loja(id_loja) ,
 	NIF_Funcionario	INT NOT NULL REFERENCES Funcionario(NIF),
 	id_disco		INT NOT NULL REFERENCES Discos(id_disco),
-
+	Nif_cliente		Int Not null references Cliente(NIF),
 	PRIMARY KEY(id_venda)
 );
+
+SET IDENTITY_INSERT VEnda OFF;
