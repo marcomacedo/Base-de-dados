@@ -63,6 +63,9 @@ FROM Openrowset( Bulk 'C:\Users\Marco Macedo\Desktop\Trabalho final\ImagensDisco
 INSERT INTO Discos values (3,'20',20,'Ar de rock', 2001,1,3,3,3,6, (SELECT BulkColumn 
 FROM Openrowset( Bulk 'C:\Users\Marco Macedo\Desktop\Trabalho final\ImagensDiscos\arderock.jpg', Single_Blob) as img)); 
 
+
+UPDATE Discos set imagemDisco =  (SELECT BulkColumn 
+FROM Openrowset( Bulk 'C:\Users\Marco Macedo\Desktop\Trabalho final\ImagensDiscos\thriller.jpg', Single_Blob) as img) WHERE id_disco=2000 ;
 UPDATE Discos set imagemDisco =  (SELECT BulkColumn 
 FROM Openrowset( Bulk 'C:\Users\Marco Macedo\Desktop\Trabalho final\ImagensDiscos\desfado.jpg', Single_Blob) as img) WHERE id_disco=1 ;
 

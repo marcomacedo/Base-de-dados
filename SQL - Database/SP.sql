@@ -123,7 +123,7 @@ create procedure pesquisarGenero
 @genero varchar(30),
 @id_genero int OUTPUT
 as
-select @id_genero=id_genero from Genero as G
+select @id_genero=G.id_genero from Genero as G
 Where @genero=G.Nome
 
 
@@ -140,7 +140,7 @@ create procedure pesquisartipo
 @tipo varchar(30),
 @id_tipo int OUTPUT
 as
-select @id_tipo=id_tipo from TipoDiscos as T
+select @id_tipo=T.id_tipo from TipoDiscos as T
 Where @tipo =T.Nome
 
 
@@ -223,7 +223,8 @@ CREATE PROCEDURE InserirDisco
        @ano                            int, 
        @unidades	                   int,
 	   @genero						   varchar(30),
-	   @tipo						   varchar(30)              
+	   @tipo						   varchar(30)
+	   --@imagem						 varbinary(max)              
 AS 
 BEGIN 
     
@@ -237,11 +238,9 @@ BEGIN
 		end
 
 	 declare @id_gen int
-	 --SET @id_gen = SCOPE_IDENTITY()
 	 exec pesquisarGenero @genero, @id_gen OUTPUT
 
 	 declare @id_tipo int
-	 --SET @id_tipo = SCOPE_IDENTITY()
 	 exec pesquisartipo @tipo, @id_tipo OUTPUT
 
 	 INSERT INTO Discos
@@ -254,7 +253,7 @@ BEGIN
 			id_artista					,
 			id_genero					,
 			id_tipo						
-
+			--ImagemDisco
           ) 
      VALUES 
           ( 
@@ -266,6 +265,7 @@ BEGIN
 			@id_art						,
 			@id_gen					,
 			@id_tipo		   
+			--@imagem
           ) 
 
 END 
@@ -395,7 +395,7 @@ where PC.NIF=@Nif_Cliente
 
 ---registar Vendas
 GO
-Create procedure registarVenda
+Create procedure registrarVenda
 	--@id_venda int,
 	@Data	date,
 	@Hora	time,
@@ -541,6 +541,7 @@ select @discount = P.desconto FROM Promocao As P
 JOIN PremiumCLiente As PC ON P.id_promocao = PC.id_promocao
 WHERE @NIFF = PC.NIF
 
+
 -- atualizar stock
 -- @update pode ser 1 ou -1, dependendo se é uma inserção ou uma venda
 go
@@ -553,3 +554,5 @@ as
 	
 	declare @value int
 	SET @value = @stock + @update
+	UPDATE Discos SET stock = @value WHERE @id_disco = id_disco
+	
