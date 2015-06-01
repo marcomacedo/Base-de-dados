@@ -529,3 +529,14 @@ BEGIN
 		)
 
 END
+
+-- promoçao do premium
+go
+Create Procedure promoçaoDePremium
+	@NIFF		int,
+	@discount	int output
+as
+
+select @discount = P.desconto FROM Promocao As P 
+JOIN PremiumCLiente As PC ON P.id_promocao = PC.id_promocao
+WHERE @NIFF = PC.NIF
