@@ -556,3 +556,22 @@ as
 	SET @value = @stock + @update
 	UPDATE Discos SET stock = @value WHERE @id_disco = id_disco
 	
+--aplicar Desconto
+go
+Create Procedure aplicarDesconto
+	@NIFFCliente	int,
+	@discount		int OUTPUT
+as
+	select @discount = Pr.desconto FROM Cliente As C 
+	JOIN PremiumCLiente As PC ON PC.NIF = C.NIF
+	JOIN Promocao As Pr ON PC.id_promocao = Pr.id_promocao
+	WHERE @NIFFCliente = C.NIF
+
+
+	-- inserir promocao
+go
+Create Procedure inserirPromocao
+	@id_disco		int,
+	@id_promocao	int
+as
+	UPDATE Discos SET id_promocao = @id_promocao WHERE @id_disco = id_disco
