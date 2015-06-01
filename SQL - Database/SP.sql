@@ -540,3 +540,16 @@ as
 select @discount = P.desconto FROM Promocao As P 
 JOIN PremiumCLiente As PC ON P.id_promocao = PC.id_promocao
 WHERE @NIFF = PC.NIF
+
+-- atualizar stock
+-- @update pode ser 1 ou -1, dependendo se é uma inserção ou uma venda
+go
+Create Procedure atualizarStock
+	@id_disco	int,
+	@update		int
+as
+	declare @stock int
+	SELECT @stock = D.stock FROM Discos As D WHERE @id_disco = D.id_disco
+	
+	declare @value int
+	SET @value = @stock + @update
