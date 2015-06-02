@@ -1,3 +1,0 @@
-acrescentar data de nascimento à pessoa
-imagens para os albuns
-acrescentar a tabela admin(apenas com username e passe)
